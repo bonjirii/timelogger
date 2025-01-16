@@ -13,17 +13,18 @@ document.addEventListener('DOMContentLoaded', function() {
     // タスク表示
     function renderTasks() {
         taskListContainer.innerHTML = '';
-        tasks.forEach(task => {
+        tasks.forEach((task, index) => {
             const taskDiv = document.createElement('div');
+            taskDiv.classList.add('task-item'); // クラスを追加
             taskDiv.innerHTML = `
                 <input type="radio" name="taskRadio" ${task.active ? 'checked' : ''}>
-                <span>${task.name}</span>
+                <span class="task-name">${task.name}</span>
                 <span class="time">${formatTime(task.time[getToday()] || 0)}</span>
                 <button class="editTaskButton">…</button>
             `;
             taskListContainer.appendChild(taskDiv);
 
-            // イベントリスナー追加（ラジオボタン、時間編集、編集ボタン）
+            // イベントリスナー追加
             taskDiv.querySelector('input').addEventListener('change', () => {
                 switchTask(task);
             });
@@ -31,12 +32,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 // 時間編集処理（未実装）
                 alert('時間編集は未実装です。');
             });
+
+            // 編集ボタンの処理（変更点）
             taskDiv.querySelector('.editTaskButton').addEventListener('click', () => {
-                // 編集処理（削除ボタン表示など）（未実装）
-                alert('編集は未実装です。');
+                if(!isEditingTask){
+                    isEditingTask = true;
+                    const deleteButton = document.createElement('button');
+                    deleteButton.classList.add('deleteTaskButton');
+                    deleteButton.textContent = '削除';
+                    taskDiv.appendChild(deleteButton);
+
+                    deleteButton.addEventListener('click', () => {
+                        if (confirm(`「${task.name}」のタスクを本当に削除しますか？`)) {
+                            tasks.splice(index, 1);
+                            localStorage.setItem('tasks', JSON.stringify(tasks));
+                            renderTasks();
+                            isEditingTask = false;
+                        }else{
+                            taskDiv.removeChild(deleteButton);
+                            isEditingTask = false;
+                        }
+                    });
+                }
             });
         });
     }
+
+    // タスク追加機能
+    addTaskButton.addEventListener('click', () => {
+        const taskName = prompt("タスク名を入力してください:", "");
+        if (taskName) {
+            tasks.push({ name: taskName, time: {}, active: false });
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            renderTasks();
+        }
+    });
 
     // 時間フォーマット
     function formatTime(seconds) {
