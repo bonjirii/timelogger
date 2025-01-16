@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>タイムロガー</title>
-  <link rel="stylesheet" href="style.css">
+    <title>タイムロガー</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="container">
-    <div class="calendar-container">
-      <button class="prev-month">＜</button>
-      <button class="next-month">＞</button>
-      <div class="calendar"></div>
+    <header>
+        <h1>タイムロガー</h1>
+        <button id="calendarButton">カレンダー</button>
+    </header>
+    <main>
+        <div id="taskList">
+            <h2>タスク一覧</h2>
+            <button id="addTaskButton">+</button>
+            <div id="taskListContainer">
+                </div>
+        </div>
+        <div id="timerArea">
+            <button id="startButton">開始</button>
+        </div>
+    </main>
+    <div id="calendarModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div id="calendar"></div>
+        </div>
     </div>
-    <div class="task-list-container">
-      <button class="add-task">+ タスクを追加</button>
-      <ul class="task-list"></ul>
-    </div>
-    <div class="timer-container">
-      <button class="start-timer">▶</button>
-    </div>
-  </div>
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
